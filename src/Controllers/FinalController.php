@@ -1,21 +1,21 @@
 <?php
 
-namespace RachidLaasri\LaravelInstaller\Controllers;
+namespace duxphp\DuxravelInstaller\Controllers;
 
 use Illuminate\Routing\Controller;
-use RachidLaasri\LaravelInstaller\Events\LaravelInstallerFinished;
-use RachidLaasri\LaravelInstaller\Helpers\EnvironmentManager;
-use RachidLaasri\LaravelInstaller\Helpers\FinalInstallManager;
-use RachidLaasri\LaravelInstaller\Helpers\InstalledFileManager;
+use duxphp\DuxravelInstaller\Events\DuxravelInstallerFinished;
+use duxphp\DuxravelInstaller\Helpers\EnvironmentManager;
+use duxphp\DuxravelInstaller\Helpers\FinalInstallManager;
+use duxphp\DuxravelInstaller\Helpers\InstalledFileManager;
 
 class FinalController extends Controller
 {
     /**
      * Update installed file and display finished view.
      *
-     * @param \RachidLaasri\LaravelInstaller\Helpers\InstalledFileManager $fileManager
-     * @param \RachidLaasri\LaravelInstaller\Helpers\FinalInstallManager $finalInstall
-     * @param \RachidLaasri\LaravelInstaller\Helpers\EnvironmentManager $environment
+     * @param \duxphp\DuxravelInstaller\Helpers\InstalledFileManager $fileManager
+     * @param \duxphp\DuxravelInstaller\Helpers\FinalInstallManager $finalInstall
+     * @param \duxphp\DuxravelInstaller\Helpers\EnvironmentManager $environment
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function finish(InstalledFileManager $fileManager, FinalInstallManager $finalInstall, EnvironmentManager $environment)
@@ -24,7 +24,7 @@ class FinalController extends Controller
         $finalStatusMessage = $fileManager->update();
         $finalEnvFile = $environment->getEnvContent();
 
-        event(new LaravelInstallerFinished);
+        event(new DuxravelInstallerFinished);
 
         return view('vendor.installer.finished', compact('finalMessages', 'finalStatusMessage', 'finalEnvFile'));
     }

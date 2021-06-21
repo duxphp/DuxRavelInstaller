@@ -1,13 +1,13 @@
 <?php
 
-namespace RachidLaasri\LaravelInstaller\Providers;
+namespace duxphp\DuxravelInstaller\Providers;
 
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
-use RachidLaasri\LaravelInstaller\Middleware\canInstall;
-use RachidLaasri\LaravelInstaller\Middleware\canUpdate;
+use duxphp\DuxravelInstaller\Middleware\canInstall;
+use duxphp\DuxravelInstaller\Middleware\canUpdate;
 
-class LaravelInstallerServiceProvider extends ServiceProvider
+class DuxravelInstallerServiceProvider extends ServiceProvider
 {
     /**
      * Indicates if loading of the provider is deferred.
@@ -47,7 +47,7 @@ class LaravelInstallerServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__.'/../Config/installer.php' => base_path('config/installer.php'),
-        ], 'laravelinstaller');
+        ], 'DuxravelInstaller');
 
     }
 }

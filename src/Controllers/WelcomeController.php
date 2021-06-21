@@ -1,6 +1,6 @@
 <?php
 
-namespace RachidLaasri\LaravelInstaller\Controllers;
+namespace duxphp\DuxravelInstaller\Controllers;
 
 use Illuminate\Routing\Controller;
 

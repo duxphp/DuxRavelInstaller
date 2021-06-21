@@ -1,14 +1,14 @@
 <?php
 
-namespace RachidLaasri\LaravelInstaller\Controllers;
+namespace duxphp\DuxravelInstaller\Controllers;
 
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\DB;
-use RachidLaasri\LaravelInstaller\Events\EnvironmentSaved;
-use RachidLaasri\LaravelInstaller\Helpers\EnvironmentManager;
+use duxphp\DuxravelInstaller\Events\EnvironmentSaved;
+use duxphp\DuxravelInstaller\Helpers\EnvironmentManager;
 use Validator;
 use function Couchbase\defaultDecoder;
 
@@ -77,7 +77,7 @@ class EnvironmentController extends Controller
 
         event(new EnvironmentSaved($input));
 
-        return $redirect->route('LaravelInstaller::environmentClassic')
+        return $redirect->route('DuxravelInstaller::environmentClassic')
                         ->with(['message' => $message]);
     }
 
@@ -94,11 +94,11 @@ class EnvironmentController extends Controller
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
-            return $redirect->route('LaravelInstaller::environmentWizard')->withInput()->withErrors($validator->errors());
+            return $redirect->route('DuxravelInstaller::environmentWizard')->withInput()->withErrors($validator->errors());
         }
 
         if (! $this->checkDatabaseConnection($request)) {
-            return $redirect->route('LaravelInstaller::environmentWizard')->withInput()->withErrors([
+            return $redirect->route('DuxravelInstaller::environmentWizard')->withInput()->withErrors([
                 'DB_CONNECTION' => trans('installer_messages.environment.wizard.form.DB_CONNECTION_failed'),
             ]);
         }
@@ -107,12 +107,12 @@ class EnvironmentController extends Controller
 
         event(new EnvironmentSaved($request));
 
-        return $redirect->route('LaravelInstaller::database')
+        return $redirect->route('DuxravelInstaller::database')
                         ->with(['results' => $results]);
     }
 
     /**
-     * TODO: We can remove this code if PR will be merged: https://github.com/RachidLaasri/LaravelInstaller/pull/162
+     * TODO: We can remove this code if PR will be merged: https://github.com/RachidLaasri/DuxravelInstaller/pull/162
      * Validate database connection with user credentials (Form Wizard).
      *
      * @param Request $request

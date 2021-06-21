@@ -31,7 +31,7 @@
             </div>
         </div>
 
-        <form method="post" action="{{ route('LaravelInstaller::environmentSaveWizard') }}" class="py-6">
+        <form method="post" action="{{ route('DuxravelInstaller::environmentSaveWizard') }}" class="py-6">
             <div x-show="tab === 0">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
 

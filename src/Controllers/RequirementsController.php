@@ -1,9 +1,9 @@
 <?php
 
-namespace RachidLaasri\LaravelInstaller\Controllers;
+namespace duxphp\DuxravelInstaller\Controllers;
 
 use Illuminate\Routing\Controller;
-use RachidLaasri\LaravelInstaller\Helpers\RequirementsChecker;
+use duxphp\DuxravelInstaller\Helpers\RequirementsChecker;
 
 class RequirementsController extends Controller
 {

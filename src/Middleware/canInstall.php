@@ -1,6 +1,6 @@
 <?php
 
-namespace RachidLaasri\LaravelInstaller\Middleware;
+namespace duxphp\DuxravelInstaller\Middleware;
 
 use Closure;
 use Redirect;

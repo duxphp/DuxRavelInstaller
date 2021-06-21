@@ -1,6 +1,6 @@
 <?php
 
-namespace RachidLaasri\LaravelInstaller\Helpers;
+namespace duxphp\DuxravelInstaller\Helpers;
 
 class PermissionsChecker
 {

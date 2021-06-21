@@ -1,6 +1,6 @@
 <?php
 
-namespace RachidLaasri\LaravelInstaller\Helpers;
+namespace duxphp\DuxravelInstaller\Helpers;
 
 use Exception;
 use Illuminate\Database\SQLiteConnection;
