@@ -103,6 +103,19 @@ class EnvironmentController extends Controller
             ]);
         }
 
+        try {
+            $redis = new \Redis();
+            $redis->connect($request->input('REDIS_HOST'), 6379);
+            if ($request->input('REDIS_PASSWORD')) {
+                $redis->auth($request->input('REDIS_PASSWORD'));
+            }
+            $redis->ping();
+        }catch (\Exception $e) {
+            return $redirect->route('DuxravelInstaller::environmentWizard')->withInput()->withErrors([
+                'REDIS_HOST' => trans('installer_messages.environment.wizard.form.REDIS_CONNECTION_failed'),
+            ]);
+        }
+
         $results = $this->EnvironmentManager->saveFileWizard($request);
 
         event(new EnvironmentSaved($request));

@@ -110,6 +110,7 @@ return [
                 'REDIS_PASSWORD_placeholder' => 'Redis password',
                 'REDIS_PORT_label' => 'Redis port',
                 'REDIS_PORT_placeholder' => 'Redis port',
+                'REDIS_CONNECTION_failed' => 'Redis connection failed',
 
                 'class_mail_label' => 'mail setting',
                 'MAIL_MAILER_label' => 'mail driver',
