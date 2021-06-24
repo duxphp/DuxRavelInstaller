@@ -53,12 +53,11 @@ class DatabaseManager
         try {
             $data = app(\Duxravel\Core\Util\Hook::class)->getAll('service', 'type', 'getInstallData');
             foreach ($data as $vo) {
-                $this->call('db:seed', [
+                Artisan::call('db:seed', [
                     '--force' => true,
                     '--class' => $vo,
                 ]);
             }
-
             Artisan::call('db:seed', ['--force' => true], $outputLog);
         } catch (Exception $e) {
             return $this->response($e->getMessage(), 'error', $outputLog);
