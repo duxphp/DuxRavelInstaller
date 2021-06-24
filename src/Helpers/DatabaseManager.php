@@ -34,7 +34,7 @@ class DatabaseManager
     private function migrate(BufferedOutput $outputLog)
     {
         try {
-            Artisan::call('migrate', ['--force'=> true], $outputLog);
+            Artisan::call('migrate', ['--force' => true], $outputLog);
         } catch (Exception $e) {
             return $this->response($e->getMessage(), 'error', $outputLog);
         }
@@ -51,6 +51,14 @@ class DatabaseManager
     private function seed(BufferedOutput $outputLog)
     {
         try {
+            $data = app(\Duxravel\Core\Util\Hook::class)->getAll('service', 'type', 'getInstallData');
+            foreach ($data as $vo) {
+                $this->call('db:seed', [
+                    '--force' => true,
+                    '--class' => $vo,
+                ]);
+            }
+
             Artisan::call('db:seed', ['--force' => true], $outputLog);
         } catch (Exception $e) {
             return $this->response($e->getMessage(), 'error', $outputLog);
@@ -85,11 +93,11 @@ class DatabaseManager
     {
         if (DB::connection() instanceof SQLiteConnection) {
             $database = DB::connection()->getDatabaseName();
-            if (! file_exists($database)) {
+            if (!file_exists($database)) {
                 touch($database);
                 DB::reconnect(Config::get('database.default'));
             }
-            $outputLog->write('Using SqlLite database: '.$database, 1);
+            $outputLog->write('Using SqlLite database: ' . $database, 1);
         }
     }
 }
