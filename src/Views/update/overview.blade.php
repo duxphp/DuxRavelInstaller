@@ -1,4 +1,4 @@
-@extends('vendor.installer.layouts.master-update')
+@extends('vendor/duxphp/duxravel-installer/src/Views/layouts.master-update')
 
 @section('title', trans('installer_messages.updater.welcome.title'))
 @section('container')

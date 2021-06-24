@@ -50,14 +50,6 @@ class DuxravelInstallerServiceProvider extends ServiceProvider
         ], 'duxravelinstaller');
 
         $this->publishes([
-            __DIR__.'/../assets' => public_path('installer'),
-        ], 'duxravelinstaller');
-
-        $this->publishes([
-            __DIR__.'/../Views' => base_path('resources/views/vendor/installer'),
-        ], 'duxravelinstaller');
-
-        $this->publishes([
             __DIR__.'/../Lang' => base_path('resources/lang'),
         ], 'duxravelinstaller');
     }

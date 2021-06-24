@@ -34,6 +34,6 @@ class RequirementsController extends Controller
             config('installer.requirements')
         );
 
-        return view('vendor.installer.requirements', compact('requirements', 'phpSupportInfo'));
+        return view('vendor/duxphp/duxravel-installer/src/Views/requirements', compact('requirements', 'phpSupportInfo'));
     }
 }

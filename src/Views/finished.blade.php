@@ -1,4 +1,4 @@
-@extends('vendor.installer.layouts.master')
+@extends('vendor/duxphp/duxravel-installer/src/Views/layouts.master')
 
 @section('template_title')
     {{ trans('installer_messages.final.templateTitle') }}

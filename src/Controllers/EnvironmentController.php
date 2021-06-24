@@ -34,7 +34,7 @@ class EnvironmentController extends Controller
      */
     public function environmentMenu()
     {
-        return view('vendor.installer.environment');
+        return view('vendor/duxphp/duxravel-installer/src/Views/environment');
     }
 
     /**
@@ -46,7 +46,7 @@ class EnvironmentController extends Controller
     {
         $envConfig = $this->EnvironmentManager->getEnvContent();
         $data = config('installer.environment.form.fields');
-        return view('vendor.installer.environment-wizard', [
+        return view('vendor/duxphp/duxravel-installer/src/Views/environment-wizard', [
             'env' => \Dotenv\Dotenv::parse($envConfig),
             'data' => $data
         ]);
@@ -61,7 +61,7 @@ class EnvironmentController extends Controller
     {
         $envConfig = $this->EnvironmentManager->getEnvContent();
 
-        return view('vendor.installer.environment-classic', compact('envConfig'));
+        return view('vendor/duxphp/duxravel-installer/src/Views/environment-classic', compact('envConfig'));
     }
 
     /**

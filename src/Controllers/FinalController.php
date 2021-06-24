@@ -26,6 +26,6 @@ class FinalController extends Controller
 
         event(new DuxravelInstallerFinished);
 
-        return view('vendor.installer.finished', compact('finalMessages', 'finalStatusMessage', 'finalEnvFile'));
+        return view('vendor/duxphp/duxravel-installer/src/Views/finished', compact('finalMessages', 'finalStatusMessage', 'finalEnvFile'));
     }
 }
