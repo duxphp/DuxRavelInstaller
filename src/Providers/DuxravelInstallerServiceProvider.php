@@ -47,10 +47,10 @@ class DuxravelInstallerServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__.'/../Config/installer.php' => base_path('config/installer.php'),
-        ], 'duxravelinstaller');
+        ], 'duxravel-install');
 
         $this->publishes([
             __DIR__.'/../Lang' => base_path('resources/lang'),
-        ], 'duxravelinstaller');
+        ], 'duxravel-install');
     }
 }
