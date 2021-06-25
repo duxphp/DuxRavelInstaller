@@ -51,7 +51,7 @@ class DatabaseManager
     private function seed(BufferedOutput $outputLog)
     {
         try {
-            $data = app_hook('type', 'getInstallData');
+            $data = app_hook('Service', 'getInstallData');
             foreach ($data as $vo) {
                 Artisan::call('db:seed', [
                     '--force' => true,
