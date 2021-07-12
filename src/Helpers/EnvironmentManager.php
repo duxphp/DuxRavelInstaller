@@ -73,12 +73,12 @@ class EnvironmentManager
      */
     public function saveFileClassic(Request $input)
     {
-        $message = trans('installer_messages.environment.success');
+        $message = trans('duxinstall::lang.environment.success');
 
         try {
             file_put_contents($this->envPath, $input->get('envConfig'));
         } catch (Exception $e) {
-            $message = trans('installer_messages.environment.errors');
+            $message = trans('duxinstall::lang.environment.errors');
         }
 
         return $message;
@@ -92,7 +92,7 @@ class EnvironmentManager
      */
     public function saveFileWizard(Request $request)
     {
-        $results = trans('installer_messages.environment.success');
+        $results = trans('duxinstall::lang.environment.success');
 
         $data = $request->input();
         $contentArray = collect(file($this->envPath, FILE_IGNORE_NEW_LINES));
@@ -110,7 +110,7 @@ class EnvironmentManager
         try {
             file_put_contents($this->envPath, $content);
         } catch (Exception $e) {
-            $results = trans('installer_messages.environment.errors');
+            $results = trans('duxinstall::lang.environment.errors');
         }
 
         return $results;

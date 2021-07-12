@@ -63,7 +63,7 @@ class DatabaseManager
             return $this->response($e->getMessage(), 'error', $outputLog);
         }
 
-        return $this->response(trans('installer_messages.final.finished'), 'success', $outputLog);
+        return $this->response(trans('duxinstall::lang.final.finished'), 'success', $outputLog);
     }
 
     /**

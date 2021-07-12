@@ -99,7 +99,7 @@ class EnvironmentController extends Controller
 
         if (! $this->checkDatabaseConnection($request)) {
             return $redirect->route('DuxravelInstaller::environmentWizard')->withInput()->withErrors([
-                'DB_CONNECTION' => trans('installer_messages.environment.wizard.form.DB_CONNECTION_failed'),
+                'DB_CONNECTION' => trans('duxinstall::lang.environment.wizard.form.DB_CONNECTION_failed'),
             ]);
         }
 
@@ -112,7 +112,7 @@ class EnvironmentController extends Controller
             $redis->ping();
         }catch (\Exception $e) {
             return $redirect->route('DuxravelInstaller::environmentWizard')->withInput()->withErrors([
-                'REDIS_HOST' => trans('installer_messages.environment.wizard.form.REDIS_CONNECTION_failed'),
+                'REDIS_HOST' => trans('duxinstall::lang.environment.wizard.form.REDIS_CONNECTION_failed'),
             ]);
         }
 
