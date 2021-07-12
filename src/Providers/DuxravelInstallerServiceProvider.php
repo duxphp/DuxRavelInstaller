@@ -24,6 +24,7 @@ class DuxravelInstallerServiceProvider extends ServiceProvider
     public function register()
     {
         $this->publishFiles();
+        $this->mergeConfigFrom(__DIR__.'/../Config/installer.php', 'installer');
         $this->loadRoutesFrom(__DIR__.'/../Routes/web.php');
     }
 
@@ -46,7 +47,6 @@ class DuxravelInstallerServiceProvider extends ServiceProvider
     protected function publishFiles()
     {
 
-        $this->mergeConfigFrom(__DIR__.'/../Config/installer.php', 'installer');
 
         $this->publishes([
             __DIR__.'/../Lang' => base_path('resources/lang'),
