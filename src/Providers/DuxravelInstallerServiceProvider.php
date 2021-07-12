@@ -46,10 +46,7 @@ class DuxravelInstallerServiceProvider extends ServiceProvider
     protected function publishFiles()
     {
         $this->publishes([
-            __DIR__.'/../Config/installer.php' => base_path('config/installer.php'),
-        ], 'duxravel-install');
-
-        $this->publishes([
+            __DIR__.'/../Config/installer.php' => config_path('installer.php'),
             __DIR__.'/../Lang' => base_path('resources/lang'),
         ], 'duxravel-install');
     }
