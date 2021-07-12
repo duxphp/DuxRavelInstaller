@@ -37,6 +37,6 @@ class DuxravelInstallerServiceProvider extends ServiceProvider
         $router->middlewareGroup('install', [CanInstall::class]);
         $router->middlewareGroup('update', [CanUpdate::class]);
 
-        $this->loadTranslationsFrom(__DIR__.'/../Lang', 'installer_messages');
+        $this->loadTranslationsFrom(__DIR__.'/../Lang', 'duxinstall');
     }
 }

@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@if (trim($__env->yieldContent('template_title')))@yield('template_title') | @endif {{ trans('installer_messages.updater.title') }}</title>
+    <title>@if (trim($__env->yieldContent('template_title')))@yield('template_title') | @endif {{ trans('duxinstall::lang.updater.title') }}</title>
     <link rel="stylesheet" href="/static/system/css/base.css"/>
     <link rel="stylesheet" href="/static/system/css/fontawesome.min.css"/>
     <script src="//unpkg.com/alpinejs" defer></script>
@@ -21,18 +21,18 @@
 
     <div class="max-w-xl max-w-2xl w-full bg-white rounded shadow">
         <div class="bg-blue-900 text-white  text-center rounded-t text-sm">
-            <div class="py-6 text-xl">{{trans('installer_messages.updater.title')}}</div>
+            <div class="py-6 text-xl">{{trans('duxinstall::lang.updater.title')}}</div>
         </div>
         <ul class="app-step-num py-4 border-b border-gray-300">
 
             <li class="{{isActive('LaravelUpdater::welcome')}} {{isActive('LaravelUpdater::overview')}} {{isActive('LaravelUpdater::final')}}">
-                {{ trans('installer_messages.updater.welcome.title') }}
+                {{ trans('duxinstall::lang.updater.welcome.title') }}
             </li>
             <li class="{{isActive('LaravelUpdater::overview')}} {{isActive('LaravelUpdater::final')}}">
-                {{ trans('installer_messages.updater.overview.title') }}
+                {{ trans('duxinstall::lang.updater.overview.title') }}
             </li>
             <li class="{{isActive('LaravelUpdater::final')}}">
-                {{ trans('installer_messages.updater.final.title') }}
+                {{ trans('duxinstall::lang.updater.final.title') }}
             </li>
         </ul>
         <div class="pt-6 px-6 text-sm">

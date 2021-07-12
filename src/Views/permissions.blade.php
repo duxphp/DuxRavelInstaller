@@ -1,12 +1,12 @@
 @extends('vendor/duxphp/duxravel-installer/src/Views/layouts.master')
 
 @section('template_title')
-    {{ trans('installer_messages.permissions.templateTitle') }}
+    {{ trans('duxinstall::lang.permissions.templateTitle') }}
 @endsection
 
 @section('title')
     <i class="fa fa-key fa-fw" aria-hidden="true"></i>
-    {{ trans('installer_messages.permissions.title') }}
+    {{ trans('duxinstall::lang.permissions.title') }}
 @endsection
 
 @section('container')
@@ -34,7 +34,7 @@
     @if ( ! isset($permissions['errors']))
         <div class="py-8 text-right">
             <a href="{{ route('DuxravelInstaller::environment') }}" class="btn-blue">
-                {{ trans('installer_messages.permissions.next') }}
+                {{ trans('duxinstall::lang.permissions.next') }}
                 <i class="fa fa-angle-right fa-fw" aria-hidden="true"></i>
             </a>
         </div>
