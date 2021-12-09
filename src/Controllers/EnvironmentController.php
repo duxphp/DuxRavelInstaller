@@ -2,138 +2,117 @@
 
 namespace duxphp\DuxravelInstaller\Controllers;
 
-use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Routing\Redirector;
+use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use duxphp\DuxravelInstaller\Events\EnvironmentSaved;
-use duxphp\DuxravelInstaller\Helpers\EnvironmentManager;
 use Validator;
 use function Couchbase\defaultDecoder;
 
 class EnvironmentController extends Controller
 {
-    /**
-     * @var EnvironmentManager
-     */
-    protected $EnvironmentManager;
 
-    /**
-     * @param EnvironmentManager $environmentManager
-     */
-    public function __construct(EnvironmentManager $environmentManager)
+    private $envPath;
+
+    private $envExamplePath;
+
+    private $fields = [];
+    private $rules = [];
+
+    public function __construct()
     {
-        $this->EnvironmentManager = $environmentManager;
+        $this->envPath = base_path('.env');
+        $this->envExamplePath = base_path('.env.example');
+
+        $this->fields = [
+            [
+                'APP_NAME' => '系统名称',
+                'APP_URL' => '系统地址',
+            ],
+            [
+                'DB_HOST' => '数据库地址',
+                'DB_PORT' => '数据库端口',
+                'DB_DATABASE' => '数据库名',
+                'DB_USERNAME' => '数据库账号',
+                'DB_PASSWORD' => '数据库密码',
+                'DB_TABLE_PREFIX' => '数据表前缀',
+            ]
+        ];
+        $this->rules = [
+            'APP_NAME' => 'required|string|max:50',
+            'APP_URL' => 'required|url',
+            'DB_HOST' => 'required|string|max:50',
+            'DB_PORT' => 'required|numeric',
+            'DB_DATABASE' => 'required|string|max:50',
+            'DB_USERNAME' => 'required|string|max:50',
+            'DB_PASSWORD' => 'nullable|string|max:50',
+            'DB_TABLE_PREFIX' => 'nullable|string|max:50',
+        ];
     }
 
-    /**
-     * Display the Environment menu page.
-     *
-     * @return \Illuminate\View\View
-     */
-    public function environmentMenu()
+    public function environment()
     {
-        return view('vendor/duxphp/duxravel-installer/src/Views/environment');
-    }
-
-    /**
-     * Display the Environment page.
-     *
-     * @return \Illuminate\View\View
-     */
-    public function environmentWizard()
-    {
-        $envConfig = $this->EnvironmentManager->getEnvContent();
-        $data = config('installer.environment.form.fields');
-        return view('vendor/duxphp/duxravel-installer/src/Views/environment-wizard', [
+        $envConfig = $this->getEnvContent();
+        return view('vendor/duxphp/duxravel-installer/src/Views/environment', [
             'env' => \Dotenv\Dotenv::parse($envConfig),
-            'data' => $data
+            'data' => $this->fields
         ]);
     }
 
-    /**
-     * Display the Environment page.
-     *
-     * @return \Illuminate\View\View
-     */
-    public function environmentClassic()
+    public function save(Request $request, Redirector $redirect)
     {
-        $envConfig = $this->EnvironmentManager->getEnvContent();
-
-        return view('vendor/duxphp/duxravel-installer/src/Views/environment-classic', compact('envConfig'));
-    }
-
-    /**
-     * Processes the newly saved environment configuration (Classic).
-     *
-     * @param Request $input
-     * @param Redirector $redirect
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function saveClassic(Request $input, Redirector $redirect)
-    {
-        $message = $this->EnvironmentManager->saveFileClassic($input);
-
-        event(new EnvironmentSaved($input));
-
-        return $redirect->route('DuxravelInstaller::environmentClassic')
-                        ->with(['message' => $message]);
-    }
-
-    /**
-     * Processes the newly saved environment configuration (Form Wizard).
-     *
-     * @param Request $request
-     * @param Redirector $redirect
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function saveWizard(Request $request, Redirector $redirect)
-    {
-        $rules = config('installer.environment.form.rules');
-        $validator = Validator::make($request->all(), $rules);
+        $validator = Validator::make($request->all(), $this->rules);
 
         if ($validator->fails()) {
-            return $redirect->route('DuxravelInstaller::environmentWizard')->withInput()->withErrors($validator->errors());
+            return $redirect->route('DuxravelInstaller::environment')->withInput()->withErrors($validator->errors());
         }
 
-        if (! $this->checkDatabaseConnection($request)) {
-            return $redirect->route('DuxravelInstaller::environmentWizard')->withInput()->withErrors([
-                'DB_CONNECTION' => trans('duxinstall::lang.environment.wizard.form.DB_CONNECTION_failed'),
+        if (!$this->checkDatabaseConnection($request)) {
+            return $redirect->route('DuxravelInstaller::environment')->withInput()->withErrors([
+                'DB_HOST' => '数据库连接失败',
             ]);
         }
 
-        try {
-            $redis = new \Redis();
-            $redis->connect($request->input('REDIS_HOST'), 6379);
-            if ($request->input('REDIS_PASSWORD')) {
-                $redis->auth($request->input('REDIS_PASSWORD'));
+        $data = $request->input();
+        $contentArray = collect(file($this->envPath, FILE_IGNORE_NEW_LINES));
+        $contentArray->transform(function ($item) use ($data) {
+            foreach ($data as $key => $vo) {
+                if (str_contains($item, $key . '=')) {
+                    return $key . '=' . $vo;
+                }
             }
-            $redis->ping();
-        }catch (\Exception $e) {
-            return $redirect->route('DuxravelInstaller::environmentWizard')->withInput()->withErrors([
-                'REDIS_HOST' => trans('duxinstall::lang.environment.wizard.form.REDIS_CONNECTION_failed'),
-            ]);
+            return $item;
+        });
+        $content = implode("\n", $contentArray->toArray());
+
+        $results = '配置文件保存成功';
+        try {
+            file_put_contents($this->envPath, $content);
+        } catch (Exception $e) {
+            $results = '配置文件保存失败';
         }
-
-        $results = $this->EnvironmentManager->saveFileWizard($request);
-
-        event(new EnvironmentSaved($request));
 
         return $redirect->route('DuxravelInstaller::database')
-                        ->with(['results' => $results]);
+            ->with(['results' => $results]);
     }
 
-    /**
-     * TODO: We can remove this code if PR will be merged: https://github.com/RachidLaasri/DuxravelInstaller/pull/162
-     * Validate database connection with user credentials (Form Wizard).
-     *
-     * @param Request $request
-     * @return bool
-     */
+    private function getEnvContent()
+    {
+        if (!file_exists($this->envPath)) {
+            if (file_exists($this->envExamplePath)) {
+                copy($this->envExamplePath, $this->envPath);
+            } else {
+                touch($this->envPath);
+            }
+        }
+
+        return file_get_contents($this->envPath);
+    }
+
     private function checkDatabaseConnection(Request $request)
     {
-        $connection = $request->input('DB_CONNECTION');
+        $connection = 'mysql';
 
         $settings = config("database.connections.$connection");
 
@@ -154,10 +133,8 @@ class EnvironmentController extends Controller
         ]);
 
         DB::purge();
-
         try {
             DB::connection()->getPdo();
-
             return true;
         } catch (Exception $e) {
             return false;

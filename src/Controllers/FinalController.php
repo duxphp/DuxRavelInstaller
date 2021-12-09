@@ -3,29 +3,70 @@
 namespace duxphp\DuxravelInstaller\Controllers;
 
 use Illuminate\Routing\Controller;
-use duxphp\DuxravelInstaller\Events\DuxravelInstallerFinished;
-use duxphp\DuxravelInstaller\Helpers\EnvironmentManager;
-use duxphp\DuxravelInstaller\Helpers\FinalInstallManager;
-use duxphp\DuxravelInstaller\Helpers\InstalledFileManager;
+use Illuminate\Support\Facades\Artisan;
+use Symfony\Component\Console\Output\BufferedOutput;
 
 class FinalController extends Controller
 {
-    /**
-     * Update installed file and display finished view.
-     *
-     * @param \duxphp\DuxravelInstaller\Helpers\InstalledFileManager $fileManager
-     * @param \duxphp\DuxravelInstaller\Helpers\FinalInstallManager $finalInstall
-     * @param \duxphp\DuxravelInstaller\Helpers\EnvironmentManager $environment
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function finish(InstalledFileManager $fileManager, FinalInstallManager $finalInstall, EnvironmentManager $environment)
+
+    public function finish()
     {
-        $finalMessages = $finalInstall->runFinal();
-        $finalStatusMessage = $fileManager->update();
-        $finalEnvFile = $environment->getEnvContent();
+        $outputLog = new BufferedOutput;
+        $this->generateKey($outputLog);
+        $finalMessages = $outputLog->fetch();
+        $finalStatusMessage = $this->generateLock();
 
-        event(new DuxravelInstallerFinished);
+        return view('vendor/duxphp/duxravel-installer/src/Views/finished', compact('finalMessages', 'finalStatusMessage'));
+    }
 
-        return view('vendor/duxphp/duxravel-installer/src/Views/finished', compact('finalMessages', 'finalStatusMessage', 'finalEnvFile'));
+    /**
+     * 生成安全码
+     * @param BufferedOutput $outputLog
+     * @return array|BufferedOutput
+     */
+    private function generateKey(BufferedOutput $outputLog)
+    {
+        try {
+            if (config('installer.final.key')) {
+                Artisan::call('key:generate', ['--force' => true], $outputLog);
+            }
+        } catch (Exception $e) {
+            return $this->response($e->getMessage(), $outputLog);
+        }
+
+        return $outputLog;
+    }
+
+    /**
+     * 生成安装锁
+     * @return string
+     */
+    public function generateLock()
+    {
+        $installedLogFile = storage_path('installed');
+
+        $dateStamp = date('Y/m/d h:i:sa');
+        if (!file_exists($installedLogFile)) {
+            $message = 'installed ' . $dateStamp . "\n";
+            file_put_contents($installedLogFile, $message);
+        } else {
+            $message = 'updated ' . $dateStamp;
+            file_put_contents($installedLogFile, $message . PHP_EOL, FILE_APPEND | LOCK_EX);
+        }
+        return $message;
+    }
+
+    /**
+     * @param $message
+     * @param BufferedOutput $outputLog
+     * @return array
+     */
+    private function response($message, BufferedOutput $outputLog)
+    {
+        return [
+            'status' => 'error',
+            'message' => $message,
+            'dbOutputLog' => $outputLog->fetch(),
+        ];
     }
 }

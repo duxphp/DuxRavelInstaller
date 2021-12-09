@@ -3,33 +3,71 @@
 namespace duxphp\DuxravelInstaller\Controllers;
 
 use Illuminate\Routing\Controller;
-use duxphp\DuxravelInstaller\Helpers\DatabaseManager;
+use duxphp\DuxravelInstaller\Events\InstallSeed;
+use Exception;
+use Illuminate\Support\Facades\Artisan;
+use Symfony\Component\Console\Output\BufferedOutput;
 
 class DatabaseController extends Controller
 {
-    /**
-     * @var DatabaseManager
-     */
-    private $databaseManager;
 
-    /**
-     * @param DatabaseManager $databaseManager
-     */
-    public function __construct(DatabaseManager $databaseManager)
+    public function database()
     {
-        $this->databaseManager = $databaseManager;
+        $outputLog = new BufferedOutput;
+        $response = $this->migrate($outputLog);
+        return redirect()->route('DuxravelInstaller::final')->with(['message' => $response]);
+
     }
 
     /**
-     * Migrate and seed the database.
-     *
-     * @return \Illuminate\View\View
+     * 合并数据表结构
+     * @param BufferedOutput $outputLog
+     * @return array
      */
-    public function database()
+    private function migrate(BufferedOutput $outputLog)
     {
-        $response = $this->databaseManager->migrateAndSeed();
+        try {
+            Artisan::call('migrate', ['--force' => true], $outputLog);
+        } catch (Exception $e) {
+            return $this->response($e->getMessage(), 'error', $outputLog);
+        }
+        return $this->seed($outputLog);
+    }
 
-        return redirect()->route('DuxravelInstaller::final')
-                         ->with(['message' => $response]);
+    /**
+     * 合并安装数据
+     * @param BufferedOutput $outputLog
+     * @return array
+     */
+    private function seed(BufferedOutput $outputLog)
+    {
+        try {
+            $data = array_filter(event(new InstallSeed));
+            foreach ($data as $vo) {
+                Artisan::call('db:seed', [
+                    '--force' => true,
+                    '--class' => $vo,
+                ]);
+            }
+            Artisan::call('db:seed', ['--force' => true], $outputLog);
+        } catch (Exception $e) {
+            return $this->response($e->getMessage(), 'error', $outputLog);
+        }
+        return $this->response('安装数据成功', 'success', $outputLog);
+    }
+
+    /**
+     * @param $message
+     * @param $status
+     * @param BufferedOutput $outputLog
+     * @return array
+     */
+    private function response($message, $status, BufferedOutput $outputLog)
+    {
+        return [
+            'status' => $status,
+            'message' => $message,
+            'dbOutputLog' => $outputLog->fetch(),
+        ];
     }
 }

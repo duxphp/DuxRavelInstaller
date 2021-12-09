@@ -1,31 +1,39 @@
 @extends('vendor/duxphp/duxravel-installer/src/Views/layouts.master')
 
-@section('template_title')
-    {{ trans('duxinstall::lang.final.templateTitle') }}
-@endsection
-
 @section('title')
-    {{ trans('duxinstall::lang.final.title') }}
+    安装完成
 @endsection
 
 @section('container')
-
-	@if(session('message')['dbOutputLog'])
-		<p class="py-4 text-gray-500 text-base"><strong><small>{{ trans('duxinstall::lang.final.migration') }}</small></strong></p>
-		<pre class="rounded bg-gray-800 text-white max-h-60 overflow-auto p-4"><code>{{ session('message')['dbOutputLog'] }}</code></pre>
-	@endif
-
-	<p class="py-4 text-gray-500 text-base"><strong><small>{{ trans('duxinstall::lang.final.console') }}</small></strong></p>
-	<pre class="rounded bg-gray-800 text-white max-h-60 overflow-auto p-4"><code>{{ $finalMessages }}</code></pre>
-
-	<p class="py-4 text-gray-500 text-base"><strong><small>{{ trans('duxinstall::lang.final.log') }}</small></strong></p>
-	<pre class="rounded bg-gray-800 text-white max-h-60 overflow-auto p-4"><code>{{ $finalStatusMessage }}</code></pre>
-
-	<p class="py-4 text-gray-500 text-base"><strong><small>{{ trans('duxinstall::lang.final.env') }}</small></strong></p>
-	<pre class="rounded bg-gray-800 text-white max-h-60 overflow-auto p-4"><code>{{ $finalEnvFile }}</code></pre>
-
-    <div class="text-right py-6">
-        <a href="{{ url('/') }}" class="btn-blue">{{ trans('duxinstall::lang.final.exit') }}</a>
+  @if(session('message')['dbOutputLog'])
+  <div class="bg-white shadow p-6 mb-4 rounded text-sm">
+    <div class="text-base mb-4">
+      数据库安装：
     </div>
+    <pre class="p-4 bg-gray-100 overflow-auto"><code>{{ session('message')['dbOutputLog'] }}</code></pre>
+  </div>
+  @endif
 
+  <div class="bg-white shadow p-6 mb-4 rounded text-sm">
+    <div class="text-base mb-4">
+      命令执行：
+    </div>
+    <pre class="p-4 bg-gray-100 overflow-auto"><code>{{ $finalMessages }}</code></pre>
+  </div>
+
+  <div class="bg-white shadow p-6 mb-4 rounded text-sm">
+    <div class="text-base mb-4">
+      安装记录：
+    </div>
+    <pre class="p-4 bg-gray-100 overflow-auto"><code>{{ $finalStatusMessage }}</code></pre>
+  </div>
+
+  <div class="text-right mb-4">
+    <a href="{{ url('/') }}" class="bg-blue-600 text-white text-sm px-4 py-3  rounded shadow items-center inline-flex hover:shadow-md" >
+      <div>安装结束</div>
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+      </svg>
+    </a>
+  </div>
 @endsection

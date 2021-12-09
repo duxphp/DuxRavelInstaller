@@ -1,37 +1,38 @@
 {
-    "name": "duxphp/duxravel-installer",
-    "description": "Laravel web installer",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Rachid Laasri",
-            "email": "rashidlaasri@gmail.com"
-        },
-        {
-            "name": "Jeremy Kenedy",
-            "email": "jeremykenedy@gmail.com"
-        }
-    ],
-    "require": {
-        "php": ">=7.0.0"
+  "name": "duxphp/duxravel-installer",
+  "description": "duxravel installer",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Mr.L",
+      "email": "admin@duxphp.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.4.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "duxphp\\DuxravelInstaller\\": "src/"
     },
-    "autoload": {
-        "psr-4": {
-            "duxphp\\DuxravelInstaller\\": "src/"
-        },
-        "files": [
-            "src/Helpers/functions.php"
-        ]
+    "files": [
+      "src/Helpers/functions.php"
+    ]
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "duxphp\\DuxravelInstaller\\Providers\\DuxravelInstallerServiceProvider"
+      ]
     },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "duxphp\\DuxravelInstaller\\Providers\\DuxravelInstallerServiceProvider"
-            ]
-        }
-    },
-    "config": {
-        "sort-packages": true
-    },
-    "minimum-stability": "stable"
+    "duxravel": {
+      "event": [
+        "duxphp\\DuxravelInstaller\\Events\\InstallSeed"
+      ]
+    }
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "minimum-stability": "stable"
 }

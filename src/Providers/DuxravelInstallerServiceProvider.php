@@ -23,7 +23,6 @@ class DuxravelInstallerServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../Config/installer.php', 'installer');
         $this->loadRoutesFrom(__DIR__.'/../Routes/web.php');
     }
 
@@ -35,8 +34,5 @@ class DuxravelInstallerServiceProvider extends ServiceProvider
     public function boot(Router $router)
     {
         $router->middlewareGroup('install', [CanInstall::class]);
-        $router->middlewareGroup('update', [CanUpdate::class]);
-
-        $this->loadTranslationsFrom(__DIR__.'/../Lang', 'duxinstall');
     }
 }

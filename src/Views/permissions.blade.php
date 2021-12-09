@@ -1,43 +1,33 @@
 @extends('vendor/duxphp/duxravel-installer/src/Views/layouts.master')
 
-@section('template_title')
-    {{ trans('duxinstall::lang.permissions.templateTitle') }}
-@endsection
-
 @section('title')
-    <i class="fa fa-key fa-fw" aria-hidden="true"></i>
-    {{ trans('duxinstall::lang.permissions.title') }}
+    权限检查
 @endsection
 
 @section('container')
 
-    <div class="bg-white border border-gray-300 mb-2">
-        <dl>
-            @foreach($permissions['permissions'] as $permission)
-                <div class="border-b border-gray-400 px-4 py-5 flex">
-                    <dt class="text-sm font-medium text-gray-600 flex-grow">
-                        {{ $permission['folder'] }}
-                    </dt>
-                    <dd class=" text-sm text-gray-900 flex-none {{ $permission['isSet'] ? 'text-green-900' : 'text-red-900' }}">
-                        <i class="fa fa-fw fa-{{ $permission['isSet'] ? 'check-circle' : 'exclamation-circle' }} row-icon"
-                           aria-hidden="true"></i>
-                        {{ $permission['permission'] }}
-                    </dd>
-                </div>
-            @endforeach
-
-        </dl>
+  @foreach($folders as $vo)
+    <div class="bg-white shadow px-6 py-4 rounded text-sm mb-2 flex items-center">
+      <div class="text-gray-600 flex-grow ">
+        <div class="text-sm">{{ $vo['folder'] }}</div>
+      </div>
+      <div class="flex-none text-sm text-gray-900 flex-none {{ $vo['status'] ? 'text-green-600' : 'text-red-600' }}">
+        {{$vo['permission']}}
+      </div>
     </div>
+  @endforeach
 
 
-
-    @if ( ! isset($permissions['errors']))
-        <div class="py-8 text-right">
-            <a href="{{ route('DuxravelInstaller::environment') }}" class="btn-blue">
-                {{ trans('duxinstall::lang.permissions.next') }}
-                <i class="fa fa-angle-right fa-fw" aria-hidden="true"></i>
-            </a>
-        </div>
-    @endif
+  @if ( !$error )
+    <div class="text-right py-4">
+      <a href="{{ route('DuxravelInstaller::environment') }}"
+         class="bg-blue-600 text-white text-sm px-4 py-3  rounded shadow items-center inline-flex hover:shadow-md">
+        <div>安装配置</div>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+      </a>
+    </div>
+  @endif
 
 @endsection

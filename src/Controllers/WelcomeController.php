@@ -13,6 +13,9 @@ class WelcomeController extends Controller
      */
     public function welcome()
     {
-        return view('vendor/duxphp/duxravel-installer/src/Views/welcome');
+        $content = file_get_contents(base_path('LICENSE'));
+        return view('vendor/duxphp/duxravel-installer/src/Views/welcome', [
+            'content' => $content
+        ]);
     }
 }

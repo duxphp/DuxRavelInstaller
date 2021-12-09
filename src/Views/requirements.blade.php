@@ -1,63 +1,58 @@
 @extends('vendor/duxphp/duxravel-installer/src/Views/layouts.master')
 
-@section('template_title')
-    {{ trans('duxinstall::lang.requirements.templateTitle') }}
-@endsection
-
 @section('title')
-    {{ trans('duxinstall::lang.requirements.title') }}
+  组件检查
 @endsection
 
 @section('container')
-    @foreach($requirements['requirements'] as $type => $requirement)
-        <div class="bg-white border border-gray-300 mb-2">
-            <div class="px-4 py-4">
-                <h3 class="text-lg leading-6 font-medium text-gray-900 {{ $phpSupportInfo['supported'] ? 'text-green-900' : 'text-red-900' }}">
-                    {{ $type }}
-                </h3>
-                <div class="mt-1 max-w-2xl text-sm text-gray-500 flex">
-                    @if($type == 'php')
-                        <div class="flex-grow">
-                            <small>
-                                (version {{ $phpSupportInfo['minimum'] }} required)
-                            </small>
-                        </div>
-                        <div class="flex-none {{ $phpSupportInfo['supported'] ? 'text-green-900' : 'text-red-900' }}">
-                        <strong>
-                            {{ $phpSupportInfo['current'] }}
-                        </strong>
-                        <i class="fa fa-fw fa-{{ $phpSupportInfo['supported'] ? 'check-circle' : 'exclamation-circle' }} row-icon"
-                           aria-hidden="true"></i>
-                        </div>
-                    @endif
-                </div>
-            </div>
-            <div class="border-t border-gray-300">
-                <dl>
-                    @foreach($requirements['requirements'][$type] as $extention => $enabled)
-                    <div class="border-b border-gray-400 px-4 py-5 flex">
-                        <dt class="text-sm font-medium text-gray-600 flex-grow">
-                            {{ $extention }}
-                        </dt>
-                        <dd class=" text-sm text-gray-900 flex-none {{ $enabled ? 'text-green-900' : 'text-red-900' }}">
-                            <i class="fa fa-fw fa-{{ $enabled ? 'check-circle' : 'exclamation-circle' }} row-icon"
-                               aria-hidden="true"></i>
-                        </dd>
-                    </div>
-                    @endforeach
+  @foreach($requirements as $extention => $enabled)
+    <div class="bg-white shadow px-6 py-4 rounded text-sm mb-2 flex items-center">
+      <div class="text-gray-600 flex-grow ">
+        <div class="text-base">{{ $extention }}</div>
+        @if($extention === 'php')
+          <div>
+            <small class="text-gray-400">
+              (version {{ $minPHP }} required)
+            </small>
+          </div>
+        @endif
+      </div>
+      <div class="flex-none text-sm text-gray-900 flex-none {{ $enabled !== false ? 'text-green-600' : 'text-red-600' }}">
+        @if($extention === 'php')
+          @if($enabled === false)
+            {{$currentPHP['version']}}
+          @else
+            {{$enabled}}
+          @endif
+        @else
+          @if($enabled)
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                 stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          @else
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                 stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          @endif
+        @endif
+      </div>
+    </div>
+  @endforeach
 
-                </dl>
-            </div>
-        </div>
-    @endforeach
-
-    @if ( ! isset($requirements['errors']) && $phpSupportInfo['supported'] )
-        <div class="py-8 text-right">
-            <a class="btn-blue" href="{{ route('DuxravelInstaller::permissions') }}">
-                {{ trans('duxinstall::lang.requirements.next') }}
-                <i class="fa fa-angle-right fa-fw" aria-hidden="true"></i>
-            </a>
-        </div>
-    @endif
+  @if ( !$error )
+    <div class="text-right py-4">
+      <a href="{{ route('DuxravelInstaller::permissions') }}"
+         class="bg-blue-600 text-white text-sm px-4 py-3  rounded shadow items-center inline-flex hover:shadow-md">
+        <div>检查权限</div>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+      </a>
+    </div>
+  @endif
 
 @endsection
