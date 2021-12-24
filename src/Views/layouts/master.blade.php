@@ -6,13 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title') | {{config('app.name')}}安装向导</title>
-    <link crossorigin="anonymous" href="https://lib.baomitu.com/tailwindcss/2.2.15/tailwind.min.css" rel="stylesheet">
     <script defer src="https://lib.baomitu.com/alpinejs/3.2.3/cdn.min.js"></script>
     <script>
         window.Laravel = <?php echo json_encode([
             'csrfToken' => csrf_token(),
         ]); ?>
     </script>
+    <style>
+        {!! file_get_contents(base_path('vendor/duxphp/duxravel-installer/tailwind.css')) !!}
+    </style>
 </head>
 <body class="bg-gray-200 mx-5">
 
@@ -87,91 +89,6 @@
   @yield('container')
 </div>
 </div>
-
-{{--
-<div class="min-h-screen flex flex-col items-center justify-center bg-gray-200 px-4 py-6">
-
-    <div class="max-w-xl max-w-2xl w-full bg-white rounded shadow">
-        <div class="bg-blue-900 text-white  text-center rounded-t text-sm">
-            <div class="py-6 text-xl">{{trans('duxinstall::lang.title')}}</div>
-        </div>
-        <ul class="app-step-num py-4 border-b border-gray-300">
-            <li class="{{isActive('DuxravelInstaller::welcome')}} {{isActive('DuxravelInstaller::requirements')}} {{isActive('DuxravelInstaller::permissions')}} {{ isActive('DuxravelInstaller::environment')}} {{ isActive('DuxravelInstaller::environmentWizard')}} {{ isActive('DuxravelInstaller::environmentClassic')}} {{isActive('DuxravelInstaller::final')}}">
-                @if(Request::is('install') || Request::is('install/requirements') || Request::is('install/permissions') || Request::is('install/environment') || Request::is('install/environment/wizard') || Request::is('install/environment/classic') )
-                    <a href="{{ route('DuxravelInstaller::welcome') }}">
-                        {{ trans('duxinstall::lang.welcome.templateTitle') }}
-                    </a>
-                @else
-                    {{ trans('duxinstall::lang.welcome.templateTitle') }}
-                @endif
-            </li>
-            <li class="{{isActive('DuxravelInstaller::requirements')}} {{isActive('DuxravelInstaller::permissions')}} {{ isActive('DuxravelInstaller::environment')}} {{ isActive('DuxravelInstaller::environmentWizard')}} {{ isActive('DuxravelInstaller::environmentClassic')}} {{isActive('DuxravelInstaller::final')}}">
-                @if(Request::is('install') || Request::is('install/requirements') || Request::is('install/permissions') || Request::is('install/environment') || Request::is('install/environment/wizard') || Request::is('install/environment/classic') )
-                    <a href="{{ route('DuxravelInstaller::requirements') }}">
-                        {{ trans('duxinstall::lang.requirements.templateTitle') }}
-                    </a>
-                @else
-                    {{ trans('duxinstall::lang.requirements.templateTitle') }}
-                @endif
-            </li>
-            <li class="{{isActive('DuxravelInstaller::permissions')}} {{ isActive('DuxravelInstaller::environment')}} {{ isActive('DuxravelInstaller::environmentWizard')}} {{ isActive('DuxravelInstaller::environmentClassic')}} {{isActive('DuxravelInstaller::final')}}">
-                @if(Request::is('install/permissions') || Request::is('install/environment') || Request::is('install/environment/wizard') || Request::is('install/environment/classic') )
-                    <a href="{{ route('DuxravelInstaller::permissions') }}">
-                        {{ trans('duxinstall::lang.permissions.templateTitle') }}
-                    </a>
-                @else
-                    {{ trans('duxinstall::lang.permissions.templateTitle') }}
-                @endif
-
-            </li>
-            <li class="{{ isActive('DuxravelInstaller::environment')}} {{ isActive('DuxravelInstaller::environmentWizard')}} {{ isActive('DuxravelInstaller::environmentClassic')}} {{isActive('DuxravelInstaller::final')}}">
-                @if(Request::is('install/environment') || Request::is('install/environment/wizard') || Request::is('install/environment/classic') )
-                    <a href="{{ route('DuxravelInstaller::environment') }}">
-                        {{ trans('duxinstall::lang.environment.menu.templateTitle') }}
-                    </a>
-                @else
-                    {{ trans('duxinstall::lang.environment.menu.templateTitle') }}
-                @endif
-            </li>
-            <li class="{{isActive('DuxravelInstaller::final')}}">
-                {{ trans('duxinstall::lang.final.templateTitle') }}
-            </li>
-        </ul>
-        <div class="pt-6 px-6 text-sm">
-                @if (session('message'))
-                    <p class="p-4 mb-4 bg-yellow-400 border border-yellow-900 text-yellow-900 rounded">
-                        <strong>
-                            @if(is_array(session('message')))
-                                {{ session('message')['message'] }}
-                            @else
-                                {{ session('message') }}
-                            @endif
-                        </strong>
-                    </p>
-                @endif
-                @if(session()->has('errors'))
-                    <div class="p-4 mb-4 bg-yellow-400 border border-yellow-900 text-yellow-900 rounded relative" x-data="{show: true}" x-show="show">
-                        <button type="button" class="close absolute right-2 top-2" @click="show = false">
-                            <i class="fa fa-close" aria-hidden="true"></i>
-                        </button>
-                        <div class="flex items-center">
-                            <i class="fa fa-fw fa-exclamation-triangle mr-2" aria-hidden="true"></i>
-                            {{ trans('duxinstall::lang.forms.errorTitle') }}
-                        </div>
-                        <ul class="mt-2">
-                            @foreach($errors->all() as $error)
-                                <li class="mt-2">{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-
-            @yield('container')
-        </div>
-    </div>
-</div>
---}}
-
 
 @yield('scripts')
 </body>
