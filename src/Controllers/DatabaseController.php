@@ -26,6 +26,7 @@ class DatabaseController extends Controller
      */
     private function migrate(BufferedOutput $outputLog)
     {
+        Artisan::call('migrate', ['--force' => true], $outputLog);
         try {
             Artisan::call('migrate', ['--force' => true], $outputLog);
         } catch (Exception $e) {

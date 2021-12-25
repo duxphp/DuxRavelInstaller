@@ -11,6 +11,9 @@ class FinalController extends Controller
 
     public function finish()
     {
+        if (session('message') && session('message')['status'] == 'error') {
+            return view('vendor/duxphp/duxravel-installer/src/Views/finished');
+        }
         $outputLog = new BufferedOutput;
         $this->generateKey($outputLog);
         $finalMessages = $outputLog->fetch();
@@ -21,15 +24,15 @@ class FinalController extends Controller
 
     /**
      * 生成安全码
+     *
      * @param BufferedOutput $outputLog
+     *
      * @return array|BufferedOutput
      */
     private function generateKey(BufferedOutput $outputLog)
     {
         try {
-            if (config('installer.final.key')) {
-                Artisan::call('key:generate', ['--force' => true], $outputLog);
-            }
+            Artisan::call('key:generate', ['--force' => true], $outputLog);
         } catch (Exception $e) {
             return $this->response($e->getMessage(), $outputLog);
         }
@@ -57,8 +60,9 @@ class FinalController extends Controller
     }
 
     /**
-     * @param $message
+     * @param                $message
      * @param BufferedOutput $outputLog
+     *
      * @return array
      */
     private function response($message, BufferedOutput $outputLog)
